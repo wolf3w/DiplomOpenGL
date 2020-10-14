@@ -6,6 +6,12 @@
 #include <iostream>
 #include <QOpenGLFunctions_4_3_Core>
 
+/*!
+ * @class Shader
+ *
+ * @brief Класс с шейдерной компилирующий и запускающий шейдерную
+ * программу
+ */
 class Shader
 {
 private:

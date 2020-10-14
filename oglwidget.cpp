@@ -231,3 +231,8 @@ void OGLWidget::drawGrid ()
     ogl->glDeleteProgram(gridSh.program_);
     gridTmp.clear();
 }
+
+QOpenGLFunctions_4_3_Core *OGLWidget::getOGL(void)
+{
+    return ogl;
+}

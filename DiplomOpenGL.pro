@@ -33,6 +33,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     oglwidget.cpp \
+    optionsdialog.cpp \
     shader.cpp
 
 HEADERS += \
@@ -40,10 +41,12 @@ HEADERS += \
     kgfequ.h \
         mainwindow.h \
     oglwidget.hpp \
+    optionsdialog.h \
     shader.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        optionsdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

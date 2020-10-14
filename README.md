@@ -1,6 +1,6 @@
 # Diplom OpenGL
 
-## О проекте
+## Описание 
 
 Данный репозиторий хранит программу выпускной квалификационной работы (ВКР) бакалавра по специальности 09.03.03 "Прикладная информатика".
 Тема ВКР: **Численное решение задач нелинейных уравнений Клейна-Гордона и их визуализация с помощью OpenGL**
@@ -27,10 +27,10 @@
 
 ## Ссылки
 
-Статьи по Core OpenGL (оригинал): https://learnopengl.com/ \ 
-Перевод статей: https://habr.com/ru/post/310790/ \
+Статьи по Core OpenGL (оригинал): https://learnopengl.com \
+Перевод статей: https://habr.com/ru/post/310790 \
 OpenGL Mathematics: https://glm.g-truc.net/0.9.9/index.html \
-Выбор цвета для OpenGL: http://www.rgbtool.com/ \
+Выбор цвета для OpenGL: http://www.rgbtool.com \
 
 ## Благодарность
 

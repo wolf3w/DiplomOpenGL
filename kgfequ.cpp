@@ -186,7 +186,6 @@ template <typename Type>
 QVector<Type> KGFequation<Type>::getSurface ()
 {
     QVector<Type> out;
-    Type sc = 5.f;
 
     for (int i = 0; i < M; i++)
     {
@@ -196,10 +195,10 @@ QVector<Type> KGFequation<Type>::getSurface ()
             {
                 Type ic = static_cast<Type>(i),
                      jc = static_cast<Type>(j);
-                QVector<Type> point_1 {ic, jc, sc * uOut[i][j]},
-                              point_2 {ic + 1, jc, sc * uOut[i+1][j]},
-                              point_3 {ic, jc + 1, sc * uOut[i][j+1]},
-                              point_4 {ic + 1, jc + 1, sc * uOut[i+1][j+1]};
+                QVector<Type> point_1 {ic, jc, uOut[i][j]},
+                              point_2 {ic + 1, jc, uOut[i+1][j]},
+                              point_3 {ic, jc + 1, uOut[i][j+1]},
+                              point_4 {ic + 1, jc + 1, uOut[i+1][j+1]};
                 out.append(point_1);
                 out.append(point_2);
                 out.append(point_3);
@@ -218,7 +217,6 @@ template <typename Type>
 QVector<Type> KGFequation<Type>::getGrid ()
 {
     QVector<Type> out;
-    Type sc = 5.0f;
 
     for (int i = 1; i < M; i++)
     {
@@ -228,11 +226,11 @@ QVector<Type> KGFequation<Type>::getGrid ()
             {
                 Type ic = static_cast<Type>(i),
                      jc = static_cast<Type>(j);
-                QVector<Type> point_1 {ic, jc, sc * uOut[i][j]},
-                              point_2 {ic, jc - 1, sc * uOut[i][j-1]},
-                              point_3 {ic - 1, jc, sc * uOut[i-1][j]},
-                              point_4 {ic, jc + 1, sc * uOut[i][j+1]},
-                              point_5 {ic + 1, jc, sc * uOut[i+1][j]};
+                QVector<Type> point_1 {ic, jc, uOut[i][j]},
+                              point_2 {ic, jc - 1, uOut[i][j-1]},
+                              point_3 {ic - 1, jc, uOut[i-1][j]},
+                              point_4 {ic, jc + 1, uOut[i][j+1]},
+                              point_5 {ic + 1, jc, uOut[i+1][j]};
 
                 out.append(point_1);
                 out.append(point_2);

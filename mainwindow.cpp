@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "optionsdialog.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -41,5 +42,7 @@ void MainWindow::printAbout ()
 
 void MainWindow::optionsWindow ()
 {
-    QMessageBox::information(this, "Ops", "Здесь пока ничего нет");
+    OptionsDialog optionsdialog(ui->oglWidget);
+    optionsdialog.setModal(true);
+    optionsdialog.exec();
 }
