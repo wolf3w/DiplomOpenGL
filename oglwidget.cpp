@@ -115,11 +115,9 @@ void OGLWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void OGLWidget::drawSurface ()
 {
-    /* Нужен полный путь */
-    QDir dir;
-    QMessageBox::information(this, "Test", dir.absolutePath());
-    GLchar *pathVert = "/home/wolf3w/DiplomOpenGL/vshader.vert",
-           *pathFrag = "/home/wolf3w/DiplomOpenGL/fshader.frag";
+    /* Файлы с шейдерами должны лежать в папке с билдом */
+    GLchar *pathVert = "vshader.vert",
+           *pathFrag = "fshader.frag";
 
     Shader surfShader(ogl, pathVert, pathFrag);
 
