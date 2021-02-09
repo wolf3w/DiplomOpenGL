@@ -73,34 +73,44 @@ void KGFequation<Type>::initLayers ()
 template <typename Type>
 inline void KGFequation<Type>::borderCalc (std::function<bool(int)> comp)
 {
-    for (int i = 1; i < N - 1; i++)
+    #pragma omp parallel
     {
-        if ( comp(i + 1) )
+        int i;
+        #pragma omp for private(i)
+        for (i = 1; i < N - 1; i++)
         {
-            uN[i][0] = -uP[i][0] + 0.5 * (uC[i][1] + uC[i - 1][0] + uC[i + 1][0])\
-                        -(h * h / 2.0) * F(0.25 * ( uC[i][1] + uC[i - 1][0] + uC[i + 1][0] ));
-        }
+            if ( comp(i + 1) )
+            {
+                uN[i][0] = -uP[i][0] + 0.5 * (uC[i][1] + uC[i - 1][0] + uC[i + 1][0])\
+                           -(h * h / 2.0) * F(0.25 * ( uC[i][1] + uC[i - 1][0] + uC[i + 1][0] ));
+            }
 
-        if ( comp(i + N) )
-        {
-            uN[i][N - 1] = -uP[i][N - 1] + 0.5 * (uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1])\
-                            -(h * h / 2.0) * F(0.25 * (uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1]));
+            if ( comp(i + N) )
+            {
+                uN[i][N - 1] = -uP[i][N - 1] + 0.5 * (uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1])\
+                               -(h * h / 2.0) * F(0.25 * (uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1]));
+            }
         }
     }
 
-    for (int j = 1; j < N - 1; j++)
+    #pragma omp parallel
     {
-        if ( comp(j + 1) )
+        int j;
+        #pragma omp for private(j)
+        for (j = 1; j < N - 1; j++)
         {
-            uN[0][j] = -uP[0][j] + 0.5 * (uC[1][j] + uC[0][j + 1] + uC[0][j - 1])\
-                       -(h * h / 2.0) * F(0.25 * (uC[1][j] + uC[0][j + 1] + uC[0][j - 1]));
-        }
+            if ( comp(j + 1) )
+            {
+                uN[0][j] = -uP[0][j] + 0.5 * (uC[1][j] + uC[0][j + 1] + uC[0][j - 1])\
+                           -(h * h / 2.0) * F(0.25 * (uC[1][j] + uC[0][j + 1] + uC[0][j - 1]));
+            }
 
-        if ( comp(j + N) )
-        {
-            uN[N - 1][j] = -uP[N - 1][j] + 0.5 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1])\
-                           -(h * h / 2.0) * F(0.25 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1]));
-        }
+            if ( comp(j + N) )
+            {
+                uN[N - 1][j] = -uP[N - 1][j] + 0.5 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1])\
+                               -(h * h / 2.0) * F(0.25 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1]));
+            }
+    }
     }
 }
 
@@ -109,9 +119,13 @@ inline void KGFequation<Type>::mainCalc (std::function<bool(int)> comp)
 {
     Type alf = 50;
 
-    for (int i = 1; i < N - 1; i++)
+    #pragma parallel
     {
-        for (int j = 1; j < N - 1; j++)
+    int i, j;
+    #pragma omp for private(i, j)
+    for (i = 1; i < N - 1; i++)
+    {
+        for (j = 1; j < N - 1; j++)
         {
             if ( comp(i + j) )
             {
@@ -125,6 +139,8 @@ inline void KGFequation<Type>::mainCalc (std::function<bool(int)> comp)
             }
         }
     }
+
+    } // parallel
 }
 
 template <typename Type>

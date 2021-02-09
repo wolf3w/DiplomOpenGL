@@ -21,6 +21,7 @@
 */
 
 #include <QVector>
+#include <omp.h>
 #include <GL/gl.h>
 #include <cmath>
 #include <functional>
