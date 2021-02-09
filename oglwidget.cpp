@@ -116,6 +116,8 @@ void OGLWidget::mouseReleaseEvent(QMouseEvent *event)
 void OGLWidget::drawSurface ()
 {
     /* Нужен полный путь */
+    QDir dir;
+    QMessageBox::information(this, "Test", dir.absolutePath());
     GLchar *pathVert = "/home/wolf3w/DiplomOpenGL/vshader.vert",
            *pathFrag = "/home/wolf3w/DiplomOpenGL/fshader.frag";
 

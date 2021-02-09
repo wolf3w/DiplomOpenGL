@@ -19,3 +19,15 @@ OptionsDialog::~OptionsDialog()
     oglw = nullptr;
     ogl  = nullptr;
 }
+
+void OptionsDialog::on_checkDT_stateChanged(int arg1)
+{
+    if (ui->checkDT->isChecked())
+    {
+        ogl->glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+        ogl->glDisable(GL_DEPTH_TEST);
+    }
+}

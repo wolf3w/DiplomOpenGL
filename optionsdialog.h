@@ -16,6 +16,9 @@ public:
     explicit OptionsDialog(OGLWidget *oglwArg, QWidget *parent = nullptr);
     ~OptionsDialog();
 
+private slots:
+    void on_checkDT_stateChanged(int arg1);
+
 private:
     Ui::OptionsDialog *ui;
     OGLWidget *oglw;
