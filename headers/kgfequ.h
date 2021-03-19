@@ -56,8 +56,11 @@ private:
     inline void mainCalc (std::function<bool(int)> comp);
     inline void updLayers ();
     inline void refreshOut ();
-    /* Запрет конструктора по умолчанию */
-    KGFequation();
+    /* Запрет конструктора по умолчанию и иных */
+    KGFequation() = delete;
+    KGFequation(KGFequation const&) = delete;
+    KGFequation(KGFequation &&) = delete;
+    KGFequation operator= (KGFequation const& ) = delete;
 };
 
 #endif // KGFEQU_H

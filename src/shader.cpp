@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "headers/shader.h"
 
 Shader::Shader (QOpenGLFunctions_4_3_Core* argFun,
                 const GLchar* vertPath, const GLchar* fragPath)

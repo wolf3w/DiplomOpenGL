@@ -1,4 +1,4 @@
-#include "oglwidget.hpp"
+#include "headers/oglwidget.hpp"
 
 OGLWidget::OGLWidget (QWidget *parent)
     : QOpenGLWidget (parent)
@@ -179,8 +179,8 @@ void OGLWidget::drawSurface ()
 
 void OGLWidget::drawGrid ()
 {
-    GLchar *pathVert = "/home/wolf3w/DiplomOpenGL/vshader.vert",
-           *pathFrag = "/home/wolf3w/DiplomOpenGL/fshader.frag";
+    GLchar *pathVert = "vshader.vert",
+           *pathFrag = "fshader.frag";
 
     Shader gridSh(ogl, pathVert, pathFrag);
 

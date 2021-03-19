@@ -1,4 +1,4 @@
-#include "optionsdialog.h"
+#include "headers/optionsdialog.h"
 #include "ui_optionsdialog.h"
 
 OptionsDialog::OptionsDialog(OGLWidget *oglwArg, QWidget *parent) :

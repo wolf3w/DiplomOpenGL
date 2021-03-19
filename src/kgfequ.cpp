@@ -1,4 +1,4 @@
-#include "kgfequ.h"
+#include "headers/kgfequ.h"
 
 bool EqSpc::isOdd (int arg)
 {
