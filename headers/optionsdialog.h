@@ -13,7 +13,7 @@ class OptionsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit OptionsDialog(OGLWidget *oglwArg, QWidget *parent = nullptr);
+    explicit OptionsDialog(QWidget *parent = nullptr);
     ~OptionsDialog();
 
 private slots:
@@ -21,8 +21,6 @@ private slots:
 
 private:
     Ui::OptionsDialog *ui;
-    OGLWidget *oglw;
-    QOpenGLFunctions_4_3_Core *ogl;
 };
 
 #endif // OPTIONSDIALOG_H

@@ -10,8 +10,7 @@
  * @class Shader
  *
  * @brief Класс с шейдерной компилирующий и запускающий шейдерную
- * программу
- */
+ * программу */
 class Shader
 {
 private:
@@ -19,15 +18,21 @@ private:
 
 public:
     GLuint program_;
-    /* Конструктор шейдера */
-    /* argFun - инициализированные функции OGL для Qt */
-    /* vertPath - путь до кода с вершинным шейдером */
-    /* fragPath - путь до кода с фрагментным шейдером */
+    /** Конструктор шейдера
+     *  argFun   - инициализированные функции OGL для Qt
+     *  vertPath - путь до кода с вершинным шейдером
+     *  fragPath - путь до кода с фрагментным шейдером */
     Shader (QOpenGLFunctions_4_3_Core *argFun, const GLchar* vertPath,
             const GLchar* fragPath);
 
-    /* Используем программу */
+    /** Используем программу */
     void Use ();
+
+    /* Запрет */
+    Shader() = delete;
+    Shader(Shader const&) = delete;
+    Shader(Shader &&) = delete;
+
 };
 
 #endif // SHADER_H

@@ -34,8 +34,7 @@ public:
     ~OGLWidget ();
     void drawGrid ();
     void drawSurface ();
-    /* Контекст отрисовки */
-    QOpenGLFunctions_4_3_Core *getOGL (void);
+
 protected:
     void initializeGL ();
     void resizeGL (int w, int h);

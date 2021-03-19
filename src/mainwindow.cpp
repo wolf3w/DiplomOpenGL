@@ -42,7 +42,7 @@ void MainWindow::printAbout ()
 
 void MainWindow::optionsWindow ()
 {
-    OptionsDialog optionsdialog(ui->oglWidget);
+    OptionsDialog optionsdialog(this);
     optionsdialog.setModal(true);
     optionsdialog.exec();
 }

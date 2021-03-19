@@ -14,17 +14,18 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+/** Направления движения камеры */
 enum camera_Movement
 {
     FORWARD, BACKWARD, LEFT, RIGHT
 };
 
-const GLfloat YAW   = -65.85f,
-              PITCH = 56.45f,
-              SPEED = 0.2f,
-              SENS  = 0.05f;
+constexpr GLfloat YAW   = -65.85f,
+                  PITCH = 56.45f,
+                  SPEED = 0.2f,
+                  SENS  = 0.05f;
 
-/* Начальное положение камеры */
+/** Начальное положение камеры */
 namespace COrig
 {
     const glm::vec3 origPos   {23.103849f, -13.426983f, 18.367807f},
@@ -46,7 +47,7 @@ public:
     GLfloat moveSpeed;
     GLfloat mouseSens;
 
-    Camera ();
+    Camera();
     Camera(glm::vec3 position,
            glm::vec3 up = COrig::origUp,
            GLfloat yaw = YAW,
@@ -56,8 +57,12 @@ public:
     glm::mat4 getViewMatrix ();
     void keyboardMove (camera_Movement direction);
     void mouseMove (GLfloat xoffset, GLfloat yoffset);
-    /* Возвращает камеру в исходное место */
+    /** Возвращает камеру в исходное место */
     void rollBack ();
+
+    /* Запрет */
+    Camera(Camera const&) = delete;
+    Camera(Camera &&) = delete;
 
 private:
     void updateCameraVectors ();

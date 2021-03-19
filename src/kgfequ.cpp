@@ -22,6 +22,12 @@ bool EqSpc::isSelected (int fArg, int sArg, int del)
            (sArg % del) == 0;
 }
 
+template <typename T>
+T inline EqSpc::sqr (T arg)
+{
+    return arg * arg;
+}
+
 template <typename Type>
 KGFequation<Type>::KGFequation (std::function<Type(Type)> FArg, int sizeArg, Type hArg, int selArg)
     : F(FArg), N(sizeArg), h(hArg), select(selArg)
@@ -53,25 +59,21 @@ KGFequation<Type>::KGFequation (std::function<Type(Type)> FArg, int sizeArg, Typ
 template <typename Type>
 void KGFequation<Type>::initLayers ()
 {
-    Type x0 = 5, y0 = 5;
-
-    std::function<Type(Type)> sqr = [] (Type arg) -> Type
-    {
-        return arg * arg;
-    };
+    constexpr Type x0 = 5,
+                   y0 = 5;
 
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
         {
-            uP[i][j] = 2 * exp( -4 * (sqr(i * h - x0) + sqr(j * h - y0)) );
-            uC[i][j] = 2 * exp( -4 * (sqr(i * h - x0) + sqr(j * h - y0)) );
+            uP[i][j] = 2 * exp( -4 * (EqSpc::sqr(i * h - x0) + EqSpc::sqr(j * h - y0)) );
+            uC[i][j] = 2 * exp( -4 * (EqSpc::sqr(i * h - x0) + EqSpc::sqr(j * h - y0)) );
         }
     }
 }
 
 template <typename Type>
-inline void KGFequation<Type>::borderCalc (std::function<bool(int)> comp)
+void KGFequation<Type>::borderCalc (std::function<bool(int)> comp)
 {
     #pragma omp parallel
     {
@@ -110,41 +112,40 @@ inline void KGFequation<Type>::borderCalc (std::function<bool(int)> comp)
                 uN[N - 1][j] = -uP[N - 1][j] + 0.5 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1])\
                                -(h * h / 2.0) * F(0.25 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1]));
             }
-    }
+        }
     }
 }
 
 template <typename Type>
-inline void KGFequation<Type>::mainCalc (std::function<bool(int)> comp)
+void KGFequation<Type>::mainCalc (std::function<bool(int)> comp)
 {
-    Type alf = 50;
+    constexpr Type alf = 50;
 
     #pragma parallel
     {
-    int i, j;
-    #pragma omp for private(i, j)
-    for (i = 1; i < N - 1; i++)
-    {
-        for (j = 1; j < N - 1; j++)
+        int i, j;
+        #pragma omp for private(i, j)
+        for (i = 1; i < N - 1; i++)
         {
-            if ( comp(i + j) )
+            for (j = 1; j < N - 1; j++)
             {
-                Type s = 0.25 * (uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j]);
-                int sign = (s > 0) ? 1 : -1;
+                if ( comp(i + j) )
+                {
+                    Type s = 0.25 * (uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j]);
+                    int sign = (s > 0) ? 1 : -1;
 
-                s = sign * alf * F(s);
+                    s = sign * alf * F(s);
 
-                uN[i][j] = -uP[i][j] + 0.5 * (uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j])\
-                            -(h * h / 2.0) * s;
+                    uN[i][j] = -uP[i][j] + 0.5 * (uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j])\
+                                -(h * h / 2.0) * s;
+                }
             }
         }
-    }
-
     } // parallel
 }
 
 template <typename Type>
-inline void KGFequation<Type>::updLayers ()
+void KGFequation<Type>::updLayers ()
 {
     for (int i = 0; i < N; i++)
     {
@@ -181,7 +182,7 @@ void KGFequation<Type>::nextIter ()
 }
 
 template <typename Type>
-inline void KGFequation<Type>::refreshOut ()
+void KGFequation<Type>::refreshOut ()
 {
     for (int i = 0; i < N; i++)
     {

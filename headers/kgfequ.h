@@ -29,6 +29,7 @@
 
 namespace EqSpc
 {
+    template<typename T> T inline sqr (T);
     bool isOdd (int arg);
     bool isEven (int arg);
     bool isIn (int fArg, int sArg, int max);
@@ -46,16 +47,16 @@ public:
     int getCurrentIter () const;
 
 private:
+    int N, M, select, curIter, maxIter;
     QVector<QVector<Type>> uP, uC, uN, uOut;
     std::function<Type(Type)> F;
     Type h;
-    int N, M, select, curIter, maxIter;
 
     void initLayers ();
-    inline void borderCalc (std::function<bool(int)> comp);
-    inline void mainCalc (std::function<bool(int)> comp);
-    inline void updLayers ();
-    inline void refreshOut ();
+    void borderCalc (std::function<bool(int)> comp);
+    void mainCalc (std::function<bool(int)> comp);
+    void updLayers ();
+    void refreshOut ();
     /* Запрет конструктора по умолчанию и иных */
     KGFequation() = delete;
     KGFequation(KGFequation const&) = delete;
