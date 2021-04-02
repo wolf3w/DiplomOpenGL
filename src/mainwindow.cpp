@@ -45,4 +45,5 @@ void MainWindow::optionsWindow ()
     OptionsDialog optionsdialog(this);
     optionsdialog.setModal(true);
     optionsdialog.exec();
+    std::cout << "Test" << std::endl;
 }

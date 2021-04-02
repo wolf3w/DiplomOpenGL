@@ -1,21 +1,21 @@
 #include "headers/kgfequ.h"
 
-bool EqSpc::isOdd (int arg)
+inline bool eqspc::isOdd (int arg)
 {
     return (arg % 2) == 1;
 }
 
-bool EqSpc::isEven (int arg)
+inline bool eqspc::isEven (int arg)
 {
     return (arg % 2) == 0;
 }
 
-bool EqSpc::isIn (int fArg, int sArg, int max)
+inline bool eqspc::isIn (int fArg, int sArg, int max)
 {
     return (fArg < max && sArg < max);
 }
 
-bool EqSpc::isSelected (int fArg, int sArg, int del)
+inline bool eqspc::isSelected (int fArg, int sArg, int del)
 {
     return (fArg % del) == 0
             &&
@@ -23,7 +23,7 @@ bool EqSpc::isSelected (int fArg, int sArg, int del)
 }
 
 template <typename T>
-T inline EqSpc::sqr (T arg)
+inline T eqspc::sqr (T arg)
 {
     return arg * arg;
 }
@@ -66,8 +66,10 @@ void KGFequation<Type>::initLayers ()
     {
         for (int j = 0; j < N; j++)
         {
-            uP[i][j] = 2 * exp( -4 * (EqSpc::sqr(i * h - x0) + EqSpc::sqr(j * h - y0)) );
-            uC[i][j] = 2 * exp( -4 * (EqSpc::sqr(i * h - x0) + EqSpc::sqr(j * h - y0)) );
+            Type const shortExp = 2 * exp( -4 * (eqspc::sqr(i * h - x0) + eqspc::sqr(j * h - y0)) );
+
+            uP[i][j] = shortExp;
+            uC[i][j] = shortExp;
         }
     }
 }
@@ -83,14 +85,16 @@ void KGFequation<Type>::borderCalc (std::function<bool(int)> comp)
         {
             if ( comp(i + 1) )
             {
-                uN[i][0] = -uP[i][0] + 0.5 * (uC[i][1] + uC[i - 1][0] + uC[i + 1][0])\
-                           -(h * h / 2.0) * F(0.25 * ( uC[i][1] + uC[i - 1][0] + uC[i + 1][0] ));
+                Type const tmp = uC[i][1] + uC[i - 1][0] + uC[i + 1][0];
+
+                uN[i][0] = -uP[i][0] + 0.5 * tmp - (0.5 * h * h) * F( 0.25 * tmp );
             }
 
             if ( comp(i + N) )
             {
-                uN[i][N - 1] = -uP[i][N - 1] + 0.5 * (uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1])\
-                               -(h * h / 2.0) * F(0.25 * (uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1]));
+                Type const tmp = uC[i][N - 2] + uC[i - 1][N - 1] + uC[i + 1][N - 1];
+
+                uN[i][N - 1] = -uP[i][N - 1] + 0.5 * tmp - (0.5 * h * h) * F(0.25 * tmp);
             }
         }
     }
@@ -103,14 +107,16 @@ void KGFequation<Type>::borderCalc (std::function<bool(int)> comp)
         {
             if ( comp(j + 1) )
             {
-                uN[0][j] = -uP[0][j] + 0.5 * (uC[1][j] + uC[0][j + 1] + uC[0][j - 1])\
-                           -(h * h / 2.0) * F(0.25 * (uC[1][j] + uC[0][j + 1] + uC[0][j - 1]));
+                Type const tmp = uC[1][j] + uC[0][j + 1] + uC[0][j - 1];
+
+                uN[0][j] = -uP[0][j] + 0.5 * tmp - (0.5 * h * h) * F(0.25 * tmp);
             }
 
             if ( comp(j + N) )
             {
-                uN[N - 1][j] = -uP[N - 1][j] + 0.5 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1])\
-                               -(h * h / 2.0) * F(0.25 * (uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1]));
+                Type const tmp = uC[N - 2][j] + uC[N - 1][j + 1] + uC[N - 1][j - 1];
+
+                uN[N - 1][j] = -uP[N - 1][j] + 0.5 * tmp - (0.5 * h * h) * F(0.25 * tmp);
             }
         }
     }
@@ -131,13 +137,13 @@ void KGFequation<Type>::mainCalc (std::function<bool(int)> comp)
             {
                 if ( comp(i + j) )
                 {
-                    Type s = 0.25 * (uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j]);
-                    int sign = (s > 0) ? 1 : -1;
+                    Type const tmp = uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j];
+                    Type s = 0.25f * tmp;
+                    char const sign = (s > 0) ? 1 : -1;
 
                     s = sign * alf * F(s);
 
-                    uN[i][j] = -uP[i][j] + 0.5 * (uC[i][j + 1] + uC[i][j - 1] + uC[i - 1][j] + uC[i + 1][j])\
-                                -(h * h / 2.0) * s;
+                    uN[i][j] = -uP[i][j] + 0.5 * tmp - (0.5 * h * h) * s;
                 }
             }
         }
@@ -162,17 +168,17 @@ void KGFequation<Type>::nextIter ()
 {
     for (; curIter < maxIter; curIter++)
     {
-        if ( EqSpc::isOdd(curIter) )
+        if ( eqspc::isOdd(curIter) )
         {
-            borderCalc( EqSpc::isEven );
-            mainCalc( EqSpc::isEven );
+            borderCalc( eqspc::isEven );
+            mainCalc( eqspc::isEven );
             updLayers();
         }
 
-        if ( EqSpc::isEven(curIter) )
+        if ( eqspc::isEven(curIter) )
         {
-            borderCalc( EqSpc::isOdd );
-            mainCalc( EqSpc::isOdd );
+            borderCalc( eqspc::isOdd );
+            mainCalc( eqspc::isOdd );
             updLayers();
         }
     }
@@ -188,7 +194,7 @@ void KGFequation<Type>::refreshOut ()
     {
         for (int j  = 0; j < N; j++)
         {
-            if (EqSpc::isSelected(i, j, select))
+            if (eqspc::isSelected(i, j, select))
             {
                 int iOut = i / select,
                     jOut = j / select;
@@ -208,7 +214,7 @@ QVector<Type> KGFequation<Type>::getSurface ()
     {
         for (int j = 0; j < M; j++)
         {
-            if (EqSpc::isIn(i+1, j+1, M))
+            if (eqspc::isIn(i+1, j+1, M))
             {
                 Type ic = static_cast<Type>(i),
                      jc = static_cast<Type>(j);
@@ -239,7 +245,7 @@ QVector<Type> KGFequation<Type>::getGrid ()
     {
         for (int j = 1; j < M; j++)
         {
-            if (EqSpc::isIn(i+1, j+1, M) && EqSpc::isOdd(i) && EqSpc::isOdd(j))
+            if (eqspc::isIn(i+1, j+1, M) && eqspc::isOdd(i) && eqspc::isOdd(j))
             {
                 Type ic = static_cast<Type>(i),
                      jc = static_cast<Type>(j);

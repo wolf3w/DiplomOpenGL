@@ -27,13 +27,13 @@
 #include <functional>
 #include <glm/glm.hpp>
 
-namespace EqSpc
+namespace eqspc
 {
     template<typename T> T inline sqr (T);
-    bool isOdd (int arg);
-    bool isEven (int arg);
-    bool isIn (int fArg, int sArg, int max);
-    bool isSelected (int fArg, int sArg, int del);
+    inline bool isOdd (int arg);
+    inline bool isEven (int arg);
+    inline bool isIn (int fArg, int sArg, int max);
+    inline bool isSelected (int fArg, int sArg, int del);
 }
 
 template <typename Type>
@@ -47,10 +47,10 @@ public:
     int getCurrentIter () const;
 
 private:
-    int N, M, select, curIter, maxIter;
-    QVector<QVector<Type>> uP, uC, uN, uOut;
     std::function<Type(Type)> F;
+    int N, M, select, curIter, maxIter;
     Type h;
+    QVector<QVector<Type>> uP, uC, uN, uOut;
 
     void initLayers ();
     void borderCalc (std::function<bool(int)> comp);
