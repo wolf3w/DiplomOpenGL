@@ -33,6 +33,7 @@ OGLWidget::OGLWidget (QWidget *parent)
 
 OGLWidget::~OGLWidget()
 {
+    ds = nullptr;
     delete camera;
     delete equation;
 }
@@ -161,7 +162,7 @@ void OGLWidget::drawSurface ()
 
     /* Установка цвета */
     GLint colorLoc = ogl->glGetUniformLocation(surfShader.program_, "objColor");
-    glm::vec3 colorSurf {1.0f, 0.5f, 0.31f};
+    glm::vec3 colorSurf {ds->getSurfRed(), ds->getSurfGreen(), ds->getSurfBlue()};
     ogl->glUniform3fv(colorLoc, 1, glm::value_ptr(colorSurf));
 
     /* Наконец-то отрисовка */
@@ -217,7 +218,7 @@ void OGLWidget::drawGrid ()
     ogl->glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     ogl->glUniformMatrix4fv(projecLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    glm::vec3 gridColor {0.f, 0.f, 0.f};
+    glm::vec3 gridColor {ds->getGridRed(), ds->getGridGreen(), ds->getGridBlue()};
     GLint grColorLoc = ogl->glGetUniformLocation(gridSh.program_, "objColor");
     ogl->glUniform3fv(grColorLoc, 1, glm::value_ptr(gridColor));
 
@@ -230,4 +231,9 @@ void OGLWidget::drawGrid ()
     ogl->glDeleteBuffers(1, &gridVBO);
     ogl->glDeleteProgram(gridSh.program_);
     gridTmp.clear();
+}
+
+void OGLWidget::setDataStorage (DataStorage *dspointer)
+{
+    ds = dspointer;
 }

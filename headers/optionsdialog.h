@@ -15,12 +15,26 @@ class OptionsDialog : public QDialog
 public:
     explicit OptionsDialog(QWidget *parent = nullptr);
     ~OptionsDialog();
+    void setDataStorage (DataStorage *dspointer);
 
 private slots:
     void on_checkDT_stateChanged(int arg1);
 
+    void on_surfRedSpin_valueChanged(double arg1);
+
+    void on_surfBlueSpin_valueChanged(double arg1);
+
+    void on_surfGreenSpin_valueChanged(double arg1);
+
+    void on_gridRedSpin_valueChanged(double arg1);
+
+    void on_gridBlueSpin_valueChanged(double arg1);
+
+    void on_gridGreenSpin_valueChanged(double arg1);
+
 private:
     Ui::OptionsDialog *ui;
+    DataStorage *ds;
 };
 
 #endif // OPTIONSDIALOG_H

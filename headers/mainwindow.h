@@ -5,6 +5,8 @@
 #include <QOpenGLFunctions>
 #include <QMessageBox>
 
+#include "datastorage.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -19,6 +21,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    DataStorage *dsMain;
 
     /* Вывод о приложении */
     void printAbout ();

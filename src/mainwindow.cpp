@@ -1,5 +1,6 @@
 #include "headers/mainwindow.h"
 #include "headers/optionsdialog.h"
+#include "headers/datastorage.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -8,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    /* Объект для хранения информации */
+    dsMain = &DataStorage::getInstance();
+
     /* Создадим действия для панели */
     QAction *pressOption = new QAction(tr("Настройки"), this);
     QAction *pressAbout  = new QAction(tr("О приложении"), this);
@@ -15,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(pressAbout, &QAction::triggered, this, &MainWindow::printAbout);
     connect(pressOption, &QAction::triggered, this, &MainWindow::optionsWindow);
 
+    ui->oglWidget->setDataStorage(dsMain);
     ui->menuBar->addAction(pressOption);
     ui->menuBar->addAction(pressAbout);
 }
@@ -43,7 +48,7 @@ void MainWindow::printAbout ()
 void MainWindow::optionsWindow ()
 {
     OptionsDialog optionsdialog(this);
+    optionsdialog.setDataStorage(dsMain);
     optionsdialog.setModal(true);
     optionsdialog.exec();
-    std::cout << "Test" << std::endl;
 }

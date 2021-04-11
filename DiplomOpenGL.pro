@@ -30,6 +30,7 @@ QMAKE_LFLAGS += -fopenmp
 
 SOURCES += \
     src/camera.cpp \
+    src/datastorage.cpp \
     src/kgfequ.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
@@ -43,7 +44,8 @@ HEADERS += \
     headers/mainwindow.h \
     headers/oglwidget.hpp \
     headers/optionsdialog.h \
-    headers/shader.h
+    headers/shader.h \
+    headers/datastorage.h
 
 FORMS += \
     forms/mainwindow.ui \

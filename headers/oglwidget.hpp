@@ -15,6 +15,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "kgfequ.h"
+#include "datastorage.h"
 
 /*!
  * @class OGLWidget
@@ -28,22 +29,24 @@ private:
     Camera *camera;
     GLfloat lastX, lastY;
     KGFequation<GLfloat> *equation;
+    DataStorage *ds;
 
 public:
-    OGLWidget (QWidget *parent = 0);
+    OGLWidget (QWidget *parent = nullptr);
     ~OGLWidget ();
     void drawGrid ();
     void drawSurface ();
+    void setDataStorage (DataStorage *dspointer);
 
 protected:
-    void initializeGL ();
-    void resizeGL (int w, int h);
-    void paintGL ();
+    void initializeGL () override;
+    void resizeGL (int w, int h) override;
+    void paintGL () override;
 
     /* События нажатия клавиш и движения мыши */
-    void keyPressEvent (QKeyEvent *event);
-    void mousePressEvent (QMouseEvent *event);
-    void mouseReleaseEvent (QMouseEvent *event);
+    void keyPressEvent (QKeyEvent *event) override;
+    void mousePressEvent (QMouseEvent *event) override;
+    void mouseReleaseEvent (QMouseEvent *event) override;
     QOpenGLContext *m_context;
 };
 
