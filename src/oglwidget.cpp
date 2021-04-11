@@ -29,6 +29,9 @@ OGLWidget::OGLWidget (QWidget *parent)
     };
 
     equation = new KGFequation<GLfloat>(F, 2000, 0.005f, 20);
+
+    /* Иниц-я массивов */
+    updateArrays();
 }
 
 OGLWidget::~OGLWidget()
@@ -36,6 +39,32 @@ OGLWidget::~OGLWidget()
     ds = nullptr;
     delete camera;
     delete equation;
+    clearArrays();
+}
+
+void OGLWidget::updateArrays ()
+{
+    auto surfVec = equation->getSurface();
+    surfVertSize = surfVec.size();
+    surfVertices = new GLfloat[surfVertSize];
+    for (int i = 0; i < surfVertSize; i++)
+    {
+        surfVertices[i] = surfVec[i];
+    }
+
+    auto gridVec = equation->getGrid();
+    gridVertSize = gridVec.size();
+    gridVertices = new GLfloat[gridVertSize];
+    for (int i = 0; i < gridVertSize; i++)
+    {
+        gridVertices[i] = gridVec[i];
+    }
+}
+
+void OGLWidget::clearArrays ()
+{
+    delete[] surfVertices;
+    delete[] gridVertices;
 }
 
 void OGLWidget::initializeGL ()
@@ -87,6 +116,8 @@ void OGLWidget::keyPressEvent (QKeyEvent *event)
         break;
     case Qt::Key_N:
         equation->nextIter();
+        clearArrays();
+        updateArrays();
         break;
     case Qt::Key_R:
         camera->rollBack();
@@ -122,15 +153,6 @@ void OGLWidget::drawSurface ()
 
     Shader surfShader(ogl, pathVert, pathFrag);
 
-    /* Получение массивов */
-    QVector<GLfloat> tmpVert = equation->getSurface();
-    GLfloat vertices[tmpVert.size()];
-
-    for (int i = 0; i < tmpVert.size(); i++)
-    {
-        vertices[i] = tmpVert[i];
-    }
-
     /* Создание и привязка буферов VBO и VAO */
     GLuint surfVAO, surfVBO;
 
@@ -139,7 +161,7 @@ void OGLWidget::drawSurface ()
 
     ogl->glBindVertexArray(surfVAO);
     ogl->glBindBuffer(GL_ARRAY_BUFFER, surfVBO);
-    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    ogl->glBufferData(GL_ARRAY_BUFFER, surfVertSize * sizeof(GLfloat), surfVertices, GL_STATIC_DRAW);
 
     /* Установка смещения для выбора из vertices */
     ogl->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
@@ -166,7 +188,7 @@ void OGLWidget::drawSurface ()
     ogl->glUniform3fv(colorLoc, 1, glm::value_ptr(colorSurf));
 
     /* Наконец-то отрисовка */
-    ogl->glDrawArrays(GL_TRIANGLES, 0, tmpVert.size());
+    ogl->glDrawArrays(GL_TRIANGLES, 0, surfVertSize);
     surfShader.Use();
 
     /* Отвязка и чистка */
@@ -175,7 +197,6 @@ void OGLWidget::drawSurface ()
     ogl->glDeleteVertexArrays(1, &surfVAO);
     ogl->glDeleteBuffers(1, &surfVBO);
     ogl->glDeleteProgram(surfShader.program_);
-    tmpVert.clear();
 }
 
 void OGLWidget::drawGrid ()
@@ -184,22 +205,13 @@ void OGLWidget::drawGrid ()
            *pathFrag = "fshader.frag";
 
     Shader gridSh(ogl, pathVert, pathFrag);
-
-    QVector<GLfloat> gridTmp = equation->getGrid();
-    GLfloat gridVertices[gridTmp.size()];
-
-    for (GLint i = 0; i < gridTmp.size(); i++)
-    {
-        gridVertices[i] = gridTmp[i];
-    }
-
     GLuint gridVAO, gridVBO;
 
     ogl->glGenVertexArrays(1, &gridVAO);
     ogl->glGenBuffers(1, &gridVBO);
     ogl->glBindVertexArray(gridVAO);
     ogl->glBindBuffer(GL_ARRAY_BUFFER, gridVBO);
-    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(gridVertices), gridVertices, GL_STATIC_DRAW);
+    ogl->glBufferData(GL_ARRAY_BUFFER, gridVertSize * sizeof(GLfloat), gridVertices, GL_STATIC_DRAW);
 
     ogl->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
     ogl->glEnableVertexAttribArray(0);
@@ -222,7 +234,7 @@ void OGLWidget::drawGrid ()
     GLint grColorLoc = ogl->glGetUniformLocation(gridSh.program_, "objColor");
     ogl->glUniform3fv(grColorLoc, 1, glm::value_ptr(gridColor));
 
-    ogl->glDrawArrays(GL_LINES, 0, gridTmp.size());
+    ogl->glDrawArrays(GL_LINES, 0, gridVertSize);
     gridSh.Use();
 
     ogl->glBindVertexArray(0);
@@ -230,7 +242,6 @@ void OGLWidget::drawGrid ()
     ogl->glDeleteVertexArrays(1, &gridVAO);
     ogl->glDeleteBuffers(1, &gridVBO);
     ogl->glDeleteProgram(gridSh.program_);
-    gridTmp.clear();
 }
 
 void OGLWidget::setDataStorage (DataStorage *dspointer)

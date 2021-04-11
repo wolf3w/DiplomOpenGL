@@ -25,9 +25,12 @@
 class OGLWidget : public QOpenGLWidget
 {
 private:
+    int surfVertSize{}, gridVertSize{};
+    GLfloat lastX, lastY;
     QOpenGLFunctions_4_3_Core *ogl;
     Camera *camera;
-    GLfloat lastX, lastY;
+    GLfloat* surfVertices;
+    GLfloat* gridVertices;
     KGFequation<GLfloat> *equation;
     DataStorage *ds;
 
@@ -42,6 +45,8 @@ protected:
     void initializeGL () override;
     void resizeGL (int w, int h) override;
     void paintGL () override;
+    void updateArrays ();
+    void clearArrays ();
 
     /* События нажатия клавиш и движения мыши */
     void keyPressEvent (QKeyEvent *event) override;
