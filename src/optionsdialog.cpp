@@ -17,6 +17,14 @@ OptionsDialog::~OptionsDialog()
 void OptionsDialog::setDataStorage (DataStorage *dspointer)
 {
     ds = dspointer;
+
+    ui->gridRedSpin->setValue(ds->getGridRed());
+    ui->gridGreenSpin->setValue(ds->getGridGreen());
+    ui->gridBlueSpin->setValue(ds->getGridBlue());
+
+    ui->surfRedSpin->setValue(ds->getSurfRed());
+    ui->surfGreenSpin->setValue(ds->getSurfGreen());
+    ui->surfBlueSpin->setValue(ds->getSurfBlue());
 }
 
 void OptionsDialog::on_checkDT_stateChanged(int arg1)
