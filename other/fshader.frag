@@ -1,6 +1,6 @@
 #version 430 core
 
-//in vec3 ourColor;
+in vec3 ourColor;
 out vec4 color;
 uniform vec3 objColor;
 
